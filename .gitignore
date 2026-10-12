@@ -1,0 +1,11 @@
+# Never commit INSPIRE data or derived patient-level files (PhysioNet DUA)
+*.csv.gz
+*.xlsx
+outputs/
+gold_labeling/
+data/
+*.csv
+!docs/jev_rules_v1.3.csv
+__pycache__/
+.DS_Store
+*.json

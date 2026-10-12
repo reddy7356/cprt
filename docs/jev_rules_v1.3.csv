@@ -1,0 +1,31 @@
+rule_id,node,condition,acc_aha_class,action
+S0,Scope,Cardiac surgery (ICD-10-PCS 02*) - ACC/AHA NCS guideline not applicable,-,Cardiac surgery pathway
+N1,Step 1,No CV risk factor / disease / symptom,-,Proceed to surgery
+N2,Step 2,Emergency surgery,-,Proceed to surgery; manage cardiac issues concurrently
+R1,Step 3,Acute coronary syndrome (I21/I22/I24 <=30 d),1,Urgent cardiology + MDT: defer / noninvasive / palliation
+R1b,Biomarker,Pre-op troponin elevated without ACS code (myocardial injury vs chronic elevation),2a,Cardiology review / MDT before surgery (confirm ACS vs chronic elevation)
+R5,Step 3,Recent cardiac arrest (I46 <=30 d),1,Urgent cardiology + MDT: defer surgery
+R2,Step 3,Unstable arrhythmia (I44/I47/I48/I49 <=30 d + acute treatment or K+ derangement),1,Urgent cardiology/EP + MDT: defer surgery
+R3,Step 3,Decompensated HF (I50 <=30 d + very high BNP/NT-proBNP or loop diuretic <=7 d),1,Urgent cardiology/HF + MDT: defer surgery
+R4,Modifier,"Recent stroke/TIA, ischemic or hemorrhagic (I60-I64/G45 <=90 d), elective unrelated surgery",1,Delay elective surgery >=3 months after event
+R4t,Modifier,Recent stroke/TIA + malignancy (time-sensitive surgery),1,MDT shared decision on timing (delay vs cancer progression)
+R4sR,Modifier,Stroke/hemorrhage <=14 d + stroke-related procedure,1,"Neuro/vascular team + MDT: very recent event, urgent review"
+R1c,Biomarker,Troponin elevated + elevated-risk surgery (intraperitoneal/intrathoracic/vascular),1,Urgent cardiology + MDT before surgery
+R4s,Modifier,Recent stroke/TIA + stroke-related procedure (PCS 00*/03*/0N*),-,Neuro/vascular team: deferral rule not applicable to stroke treatment
+R4L,Local rule,Low-risk procedure (<1% MACE) with recent ACS/MI or stroke - group exception,-,Low-risk exception: proceed under MAC/local/topical; cardiology/neuro aware
+R3b,Step 3,Pulmonary edema (J81 <=30 d) with HF / hypertensive heart disease (I50/I11/I13),1,Urgent cardiology/HF + MDT: defer surgery
+Y0,Step 3,Recent arrhythmia code without acute-treatment signal,-,ECG + confirm rhythm stability
+E1,Risk,RCRI >=2 = elevated calculated risk,2a,Consider GDMT initiation for long-term CV risk reduction
+E0,Risk,"RCRI 0-1 = low calculated risk, no modifiers",-,Proceed to surgery
+M1,Modifier,Valvular disease (I05/I06/I08/I34-I37) - severity unknown,1,TTE (if none <=12 mo) -> AS/MS/AR/MR valve pathway
+M2,Modifier,Pulmonary hypertension (I27) - severity unknown,1,"TTE/RHC: if mPAP>40, PVR>5 WU or RV dysfunction -> MDT"
+M3,Modifier,Congenital heart disease (Q20-Q26),1,ACHD specialist consultation before NCS
+M4,Modifier,Prior stent/CABG (Z95 or I25 + P2Y12 inhibitor),1,MDT antiplatelet plan + surgical timing
+M5,Modifier,Possible CIED (Z95 - device type not coded),1,Confirm CIED type/manufacturer/model; CIED plan if EMI expected
+F1,Modifier,Age >=65,2a,Frailty assessment with validated tool
+B0,Biomarker,Functional capacity (DASI/METs) unknown -> biomarker branch,2a,Obtain BNP/NT-proBNP (2a); consider troponin (2b)
+B1,Biomarker,BNP/NT-proBNP abnormal,2a,MDT: risks/benefits of further evaluation (echo / stress test / CCTA)
+B2,Biomarker,BNP/NT-proBNP normal,2a,Proceed to surgery
+ECG,Testing,Established CVD -> 12-lead ECG reasonable,2a,12-lead ECG
+P1,Pulmonary,Chronic lung disease / lung cancer / lung resection (outside ACC/AHA),-,Pulmonary optimization pathway (PFTs/ABG as indicated)
+MS,Stage 1,"Model safety-net flag only, no coded CV finding",-,Clinician confirms: possible undercoded disease
