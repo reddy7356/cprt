@@ -23,7 +23,8 @@ scripts/
   finalize_stage1.py        Lenient hybrid screen -> outputs/stage1_final.csv
   stage2_jev_engine.py      Jev AI rules engine (jev-1.3.0) -> outputs/stage2_jev_triage.csv
   make_gold_workbooks.py    Blinded Stage 1 rater workbooks
-  make_stage2_gold.py       Blinded, stratified Stage 2 rater workbooks
+  make_stage2_gold.py       Blinded, stratified Stage 2 rater workbooks (blank templates)
+  evaluate_stage2.py        Reproduces Stage 2 validation results from the COMPLETED rater workbooks
 docs/
   manuscript.md             Manuscript draft
   figure1_patient_flow.png  Figure 1
@@ -42,7 +43,19 @@ python3 scripts/train_stage1_xgboost.py            # add --gold gold100_final.cs
 python3 scripts/finalize_stage1.py
 python3 scripts/stage2_jev_engine.py
 python3 scripts/make_stage2_gold.py --tag stage2_valid --exclude stage2_gold_final.csv --raters 3
+# after raters return their completed files:
+python3 scripts/evaluate_stage2.py \
+    --raters gold_labeling/stage2_valid_rater1_DONE_reddy.xlsx \
+             gold_labeling/stage2_valid_rater2_DONE_sahil.xlsx \
+             gold_labeling/stage2_valid_rater3_DONE_shusrita.xlsx \
+    --key gold_labeling/stage2_valid_KEY.csv
 ```
+
+### Rater workbook provenance
+
+`make_stage2_gold.py` writes **blank templates** (`stage2_valid_rater1/2/3.xlsx`). Each rater received one workbook (sheets: Guide, Cases) and returned it completed as `stage2_valid_rater<N>_DONE_<name>.xlsx`. Only the `_DONE_` files are the evaluation inputs. `evaluate_stage2.py` prints each file's fill count and MD5 checksum and stops if a blank template is supplied. In validation, rater 1 left one case (#24) blank; that case's majority came from the other two raters.
+
+Expected output (matches the manuscript): 48 cases with a majority label, Jev AI agreement 41/48 (85.4%), Cohen κ 0.78, Fleiss κ 0.46, RED sensitivity 7/9, no severe under-triage.
 
 Run all commands from the project root containing the data files.
 
